@@ -37,11 +37,7 @@ end
 class SumMultiple
 
     def sum(max, divisors)
-        sum = 0
-        (1..max).each do |n|
-            sum += n if multiple?(n, divisors)
-        end
-        sum
+        (1..max).find_all{|n| divisors.inject(false){|isDivisible, divisor| isDivisible || n % divisor == 0}}.inject(0){|sum,n| sum+=n}
     end
 
     def multiple?(value, divisors)
