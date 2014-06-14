@@ -1,5 +1,4 @@
 # sum all numbers 1 -> 1000 that are divisible by 3 and 5
-
 require 'minitest/autorun'
 require 'minitest/pride'
 
@@ -20,27 +19,34 @@ class SumMultipleTest < MiniTest::Unit::TestCase
     end
 
     def test_multiple_of_any_n
-        assert !@sm.multiple?(1, [3])
-        assert !@sm.multiple?(1, [3,5,6])
-        assert @sm.multiple?(3,[3])
-        assert @sm.multiple?(5,[3,5])
-        assert @sm.multiple?(30,[3,5,10])
+        assert !@sm.multiple_of_any?(1, [3])
+        assert !@sm.multiple_of_any?(1, [3,5,6])
+        assert @sm.multiple_of_any?(3,[3])
+        assert @sm.multiple_of_any?(5,[3,5])
+        assert @sm.multiple_of_any?(30,[3,5,10])
     end
 
     def test_sum_to_n_with_divisors
-        assert_equal 98, @sm.sum(20, [3,5])
+        assert_equal 0, @sm.sum(2, [2])
+        assert_equal 0, @sm.sum(2, [2,3])
+        assert_equal 2, @sm.sum(3, [2,3])
+        assert_equal 23, @sm.sum(10, [3,5])
+        assert_equal 233168, @sm.sum(1000, [3,5])
     end
-
 
 end
 
 class SumMultiple
 
     def sum(max, divisors)
-        (1..max).find_all{|n| divisors.inject(false){|isDivisible, divisor| isDivisible || n % divisor == 0}}.inject(0){|sum,n| sum+=n}
+        sum = 0
+        (1...max).each do |n|
+            sum += n if multiple_of_any?(n, divisors)
+        end
+        sum
     end
 
-    def multiple?(value, divisors)
+    def multiple_of_any?(value, divisors)
         multiple = false
         divisors.each do |divisor|
             multiple = true if multiple_of_divisor?(value,divisor)
